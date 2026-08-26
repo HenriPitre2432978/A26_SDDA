@@ -7,11 +7,9 @@ namespace MyLittleRPG
 {
     class Program
     {
-        //"async" permet d'attendre les appels réseau)
         static async Task Main(string[] args)
         {
             // Création du helper PokeApi
-
             int idx = 0;
             Pokemon[] pokemons = new Pokemon[809];
             ConfigHelper configHelper = new();
@@ -21,24 +19,17 @@ namespace MyLittleRPG
             {
                 pokemons[idx] = await configHelper.GetPokemon(idx + 1);
                 idx++;
+                Thread.Sleep(100);
             }
 
             // Convert Pokemon objects to PokemonResponse objects
             PokemonResponse[] responses = new PokemonResponse[pokemons.Length];
 
             for (int i = 0; i < pokemons.Length; i++)
-            {
                 responses[i] = new PokemonResponse(pokemons[i]);
-            }
 
             //Save in json file
-            string json = JsonSerializer.Serialize(
-                responses,
-                new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                }
-            );
+            string json = JsonSerializer.Serialize(responses);
 
             string filePath = "monstersdata.json";
             File.WriteAllText(filePath, json);
